@@ -215,7 +215,7 @@ function App() {
             </div>
             <span className="detail-label">El lugar</span>
             <h3>Barrio Los Claveles</h3>
-            <p>Domicilio · Calle Cielo</p>
+            <p>Calle Cielo</p>
             <a
               className="map-link"
               href="https://www.google.com/maps/place/17%C2%B044'36.1%22S+63%C2%B006'06.0%22W/@-17.7433539,-63.1042411,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-17.7433539!4d-63.1016662?hl=es&entry=ttu"
