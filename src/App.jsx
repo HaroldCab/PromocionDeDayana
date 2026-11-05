@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Sparkle({ className = "" }) {
   return (
@@ -17,6 +17,10 @@ function Sparkle({ className = "" }) {
 }
 
 function App() {
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioError, setAudioError] = useState("");
+
   useEffect(() => {
     const revealItems = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(
@@ -35,8 +39,52 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  async function toggleMusic() {
+    const audio = audioRef.current;
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+        setAudioError("");
+      } catch {
+        setAudioError("No se pudo reproducir la música. Inténtalo de nuevo.");
+      }
+      return;
+    }
+
+    audio.pause();
+  }
+
   return (
     <main>
+      <audio
+        ref={audioRef}
+        src="/KATSEYE%20-%20Animal.mp3"
+        loop
+        preload="none"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onError={() => setAudioError("No se pudo cargar el archivo de música.")}
+      />
+      <div className="music-player">
+        <button
+          className="music-button"
+          type="button"
+          onClick={toggleMusic}
+          aria-label={isPlaying ? "Pausar música" : "Reproducir música"}
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+            {isPlaying ? (
+              <path d="M8 5v14M16 5v14" />
+            ) : (
+              <path d="m8 5 11 7-11 7V5Z" />
+            )}
+          </svg>
+          <span>{isPlaying ? "Pausar música" : "Reproducir música"}</span>
+        </button>
+        {audioError && <span className="music-error" role="status">{audioError}</span>}
+      </div>
+
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-glow hero-glow--pink" />
         <div className="hero-glow hero-glow--blue" />
@@ -166,8 +214,16 @@ function App() {
               </svg>
             </div>
             <span className="detail-label">El lugar</span>
-            <h3>En mi domicilio</h3>
-            <p>Un espacio para compartir y brindar</p>
+            <h3>Barrio Los Claveles</h3>
+            <p>Domicilio · Calle Cielo</p>
+            <a
+              className="map-link"
+              href="https://www.google.com/maps/place/17%C2%B044'36.1%22S+63%C2%B006'06.0%22W/@-17.7433539,-63.1042411,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-17.7433539!4d-63.1016662?hl=es&entry=ttu"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Ver ubicación <span aria-hidden="true">↗</span>
+            </a>
           </article>
         </div>
 
