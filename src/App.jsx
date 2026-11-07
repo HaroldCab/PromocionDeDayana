@@ -39,6 +39,20 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.play().catch((error) => {
+      if (error.name === "NotAllowedError") {
+        setAudioError("Toca «Reproducir música» para iniciar la canción.");
+        return;
+      }
+
+      setAudioError("No se pudo reproducir la música. Inténtalo de nuevo.");
+    });
+  }, []);
+
   async function toggleMusic() {
     const audio = audioRef.current;
 
@@ -59,9 +73,10 @@ function App() {
     <main>
       <audio
         ref={audioRef}
-        src="/KATSEYE%20-%20Animal.mp3"
+        src="/Lo%20lograstes%20al%20fin%20-%20Cancion%20de%20Graduacion.mp3"
+        autoPlay
         loop
-        preload="none"
+        preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onError={() => setAudioError("No se pudo cargar el archivo de música.")}
